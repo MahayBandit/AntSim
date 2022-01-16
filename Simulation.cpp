@@ -8,12 +8,15 @@ Simulation::Simulation()
 
 	window->setFramerateLimit(60);
 
-	//Initialize SimObjects
-	simObjects.clear();
+	Ants.clear();
+	Food.clear();
 
 	//Initialize Ants
-	for(int i = 0; i < 250; i++)
-		simObjects.push_back(new Ant("sprites/PH_Ant.png", 800, 450, 2, 1));
+	for (int i = 0; i < 250; i++)
+	{
+		Ants.push_back(new Ant("sprites/PH_Ant.png", videoMode.width/2, videoMode.height/2));
+		Ants[i]->InitVariables();
+	}
 }
 
 Simulation::~Simulation()
@@ -33,6 +36,26 @@ void Simulation::PollEvents()
 		//Close window
 		if (event.type == sf::Event::Closed)
 			window->close();
+
+		if (event.type == sf::Event::KeyPressed)
+		{
+			//Close window on 'escape' press
+			if (event.key.code == sf::Keyboard::Escape)
+				window->close();
+		}
+
+		if (event.type == sf::Event::MouseButtonPressed)
+		{
+			if (event.mouseButton.button == sf::Mouse::Right)
+			{
+				sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
+
+				//Spawn food source at current mouse postion
+				Food.push_back(new FoodSource("sprites/PH_Food.png", mousePos.x, mousePos.y));
+				Food[Food.size() - 1]->InitVariables(Ants);
+				std::cout << "Food created at - x: " << mousePos.x << " y: " << mousePos.y << std::endl;
+			}
+		}
 	}
 }
 
@@ -40,9 +63,17 @@ void Simulation::Update()
 {
 	PollEvents();
 
-	//Update Objects
-	for (int i = 0; i < simObjects.size(); i++)
-		simObjects[i]->Update();
+	//Update Ants
+	for (int i = 0; i < Ants.size(); i++)
+	{
+		Ants[i]->Update();
+	}
+
+	//Update food
+	for (int i = 0; i < Food.size(); i++)
+	{
+		Food[i]->Update();
+	}
 }
 
 void Simulation::Render()
@@ -50,9 +81,14 @@ void Simulation::Render()
 	//Background color
 	window->clear(sf::Color::Black);
 
-	//Draw Objects
-	for (int i = 0; i < simObjects.size(); i++)
-		window->draw(simObjects[i]->sprite);
+	//Draw Ants
+	for (int i = 0; i < Ants.size(); i++)
+		Ants[i]->Render(window);
+
+	//Draw Food
+	for (int i = 0; i < Food.size(); i++)
+		Food[i]->Render(window);
+
 
 	//Draw frame
 	window->display();

@@ -158,10 +158,10 @@
     <ClCompile Include="Simulation.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ant.h" />
-    <ClInclude Include="FoodSource.h" />
-    <ClInclude Include="SimObject.h" />
-    <ClInclude Include="Simulation.h" />
+    <ClInclude Include="include\Ant.h" />
+    <ClInclude Include="include\FoodSource.h" />
+    <ClInclude Include="include\SimObject.h" />
+    <ClInclude Include="include\Simulation.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

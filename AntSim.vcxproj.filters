@@ -32,16 +32,16 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Simulation.h">
+    <ClInclude Include="include\Ant.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Ant.h">
+    <ClInclude Include="include\FoodSource.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="SimObject.h">
+    <ClInclude Include="include\Simulation.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="FoodSource.h">
+    <ClInclude Include="include\SimObject.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -4,12 +4,15 @@
 
 class SimObject
 {
-public:
+protected:
 	sf::Vector2f position;
 	sf::Texture texture;
 	sf::Sprite sprite;
 
-	SimObject(sf::String, float, float, int, int);
+public:
+	SimObject(sf::String, float, float);
+	sf::FloatRect collsionBox;
+
 	bool SetTexture(sf::String);
-	virtual void Update();
+	void Render(sf::RenderWindow*);
 };

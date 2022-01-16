@@ -1,14 +1,14 @@
 #include "include/SimObject.h"
 
-SimObject::SimObject(sf::String textureName, float pos_x, float pos_y, int org_x, int org_y)
+SimObject::SimObject(sf::String textureName, float pos_x, float pos_y)
 {
 	if (!SetTexture(textureName))
 		return;
-
-	sprite.setOrigin(org_x, org_y);
 	position = sf::Vector2f(pos_x, pos_y);
 	sprite.setPosition(position);
 	sprite.setRotation(rand() % 361);
+
+	collsionBox = sprite.getGlobalBounds();
 }
 
 bool SimObject::SetTexture(sf::String filename)
@@ -21,7 +21,7 @@ bool SimObject::SetTexture(sf::String filename)
 	return true;
 }
 
-void SimObject::Update()
+void SimObject::Render(sf::RenderWindow* window)
 {
-	return;
+	window->draw(sprite);
 }

@@ -1,22 +1,24 @@
 #pragma once
 
-#include<vector>
+#include "include/Ant.h"
+#include "include/FoodSource.h"
+#include <vector>
+#include <iostream>
 #include <SFML/System.hpp>
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
-#include "include/Ant.h"
+
 
 class Simulation
 {
 	sf::RenderWindow* window;
 	sf::VideoMode videoMode;
 	sf::Event event;
-
-	sf::Vector2f colonyPos;
-	std::vector<sf::Vector2f> antsPos;
+	std::vector<Ant*> Ants;
+	std::vector<FoodSource*> Food;
 
 public:
-	std::vector<SimObject*> simObjects;
+
 
 	//Constructors
 	Simulation();
