@@ -1,18 +1,12 @@
 #pragma once
 
-#include "include/Ant.h"
 #include "include/SimObject.h"
-#include <vector>
-#include <iostream>
+#include "include/Ant.h"
 
-class FoodSource : public SimObject
+class Colony : public SimObject
 {
 	using SimObject::SimObject;
-	unsigned int stage;
-
 public:
-	int foodLeft;
 	void InitVariables();
 	void Update(std::vector<Ant*>&);
 };
-

@@ -152,6 +152,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Ant.cpp" />
+    <ClCompile Include="Colony.cpp" />
     <ClCompile Include="FoodSource.cpp" />
     <ClCompile Include="SimObject.cpp" />
     <ClCompile Include="main.cpp" />
@@ -159,6 +160,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ant.h" />
+    <ClInclude Include="include\Colony.h" />
     <ClInclude Include="include\FoodSource.h" />
     <ClInclude Include="include\SimObject.h" />
     <ClInclude Include="include\Simulation.h" />

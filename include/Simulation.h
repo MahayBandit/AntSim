@@ -2,6 +2,7 @@
 
 #include "include/Ant.h"
 #include "include/FoodSource.h"
+#include "include/Colony.h"
 #include <vector>
 #include <iostream>
 #include <SFML/System.hpp>
@@ -14,6 +15,7 @@ class Simulation
 	sf::RenderWindow* window;
 	sf::VideoMode videoMode;
 	sf::Event event;
+	Colony* colony;
 	std::vector<Ant*> Ants;
 	std::vector<FoodSource*> Food;
 

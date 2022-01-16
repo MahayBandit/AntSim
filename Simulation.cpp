@@ -11,16 +11,21 @@ Simulation::Simulation()
 	Ants.clear();
 	Food.clear();
 
+	//Initialize Colony
+	colony = new Colony("sprites/PH_Colony.png", videoMode.width / 2, videoMode.height / 2);
+	colony->InitVariables();
+
 	//Initialize Ants
 	for (int i = 0; i < 250; i++)
 	{
-		Ants.push_back(new Ant("sprites/PH_Ant.png", videoMode.width/2, videoMode.height/2));
+		Ants.push_back(new Ant("sprites/PH_Ant.png", videoMode.width / 2, videoMode.height / 2));
 		Ants[i]->InitVariables();
 	}
 }
 
 Simulation::~Simulation()
 {
+	delete colony;
 	delete window;
 }
 
@@ -52,7 +57,7 @@ void Simulation::PollEvents()
 
 				//Spawn food source at current mouse postion
 				Food.push_back(new FoodSource("sprites/PH_Food.png", mousePos.x, mousePos.y));
-				Food[Food.size() - 1]->InitVariables(Ants);
+				Food[Food.size() - 1]->InitVariables();
 				std::cout << "Food created at - x: " << mousePos.x << " y: " << mousePos.y << std::endl;
 			}
 		}
@@ -63,6 +68,9 @@ void Simulation::Update()
 {
 	PollEvents();
 
+	//Update Colony
+	colony->Update(Ants);
+
 	//Update Ants
 	for (int i = 0; i < Ants.size(); i++)
 	{
@@ -72,8 +80,9 @@ void Simulation::Update()
 	//Update food
 	for (int i = 0; i < Food.size(); i++)
 	{
-		Food[i]->Update();
+		Food[i]->Update(Ants);
 	}
+
 }
 
 void Simulation::Render()
@@ -88,6 +97,9 @@ void Simulation::Render()
 	//Draw Food
 	for (int i = 0; i < Food.size(); i++)
 		Food[i]->Render(window);
+
+	//Draw Colony
+	colony->Render(window);
 
 
 	//Draw frame

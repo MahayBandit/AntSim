@@ -1,20 +1,25 @@
 #include "include/FoodSource.h"
 
-void FoodSource::InitVariables(std::vector<Ant*>& Ants)
+void FoodSource::InitVariables()
 {
-	this->Ants.clear();
 	sprite.setOrigin(5, 5);
 
 	stage = 3;
 	foodLeft = 100;
-	this->Ants = Ants;
 }
 
-void FoodSource::Update()
+void FoodSource::Update(std::vector<Ant*>& Ants)
 {
+	//Give food to passing ants
 	for (int i = 0; i < Ants.size(); i++)
 	{
-		if (collsionBox.intersects(Ants[i]->collsionBox) && foodLeft > 0 && !Ants[i]->IsHoldingFood())
-		Ants[i]->PickUpFood();
+		if (collsionBox.intersects(Ants[i]->collsionBox))
+		{
+			if (foodLeft > 0 && !Ants[i]->IsHoldingFood())
+			{
+				Ants[i]->PickUpFood();
+				Ants[i]->ResetToFoodPheromone();
+			}
+		}
 	}
 }
