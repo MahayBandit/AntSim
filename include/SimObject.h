@@ -10,9 +10,10 @@ protected:
 	sf::Sprite sprite;
 
 public:
-	SimObject(sf::String, float, float);
+	SimObject(sf::String, sf::Vector2f);
 	sf::FloatRect collsionBox;
 
+	sf::Vector2f GetPostion();
 	bool SetTexture(sf::String);
 	void Render(sf::RenderWindow*);
 };

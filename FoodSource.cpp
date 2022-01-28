@@ -17,8 +17,7 @@ void FoodSource::Update(std::vector<Ant*>& Ants)
 		{
 			if (foodLeft > 0 && !Ants[i]->IsHoldingFood())
 			{
-				Ants[i]->PickUpFood();
-				Ants[i]->ResetToFoodPheromone();
+				Ants[i]->PickUpFood();			
 			}
 		}
 	}

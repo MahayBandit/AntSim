@@ -33,6 +33,9 @@
     <ClCompile Include="Colony.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Pheromone.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ant.h">
@@ -48,6 +51,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="include\Colony.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="include\Pheromone.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -2,7 +2,7 @@
 
 void Colony::InitVariables()
 {
-	sprite.setOrigin(25, 25);
+	sprite.setOrigin(15, 15);
 }
 
 void Colony::Update(std::vector<Ant*>& Ants)

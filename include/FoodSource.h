@@ -9,10 +9,9 @@ class FoodSource : public SimObject
 {
 	using SimObject::SimObject;
 	unsigned int stage;
+	int foodLeft;
 
 public:
-	int foodLeft;
 	void InitVariables();
 	void Update(std::vector<Ant*>&);
 };
-
