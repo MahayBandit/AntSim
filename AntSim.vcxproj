@@ -158,6 +158,7 @@
     <ClCompile Include="SimObject.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Simulation.cpp" />
+    <ClCompile Include="World.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="include\Ant.h" />
@@ -166,6 +167,7 @@
     <ClInclude Include="include\Pheromone.h" />
     <ClInclude Include="include\SimObject.h" />
     <ClInclude Include="include\Simulation.h" />
+    <ClInclude Include="include\World.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

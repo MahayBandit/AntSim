@@ -1,15 +1,20 @@
 #pragma once
 
-#include "include/SimObject.h"
+#include <SFML/Graphics.hpp>
 
-class Pheromone : public SimObject
+class Pheromone
 {
-	using SimObject::SimObject;
+	sf::CircleShape body;
+	float radius;
 	int intensity;
+
 public:
-	bool type; // false = to home pheromone, true = to food pheromone
-	bool toDeletion;
-	void InitVariables(bool, int);
-	void Update(sf::Time);
-	int GetIntensity();
+	Pheromone(sf::Vector2f pos, bool toFood);
+	bool toFood;
+	bool toDelete;
+	sf::Vector2f GetPos() const;
+	float GetDistance(sf::Vector2f pos) const;
+	void Diffuse();
+	void Render(sf::RenderWindow* window);
 };
+

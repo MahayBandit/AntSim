@@ -1,29 +1,30 @@
 #pragma once
 
-#include "include/SimObject.h"
-#include "include/Pheromone.h"
+#include <SFML/Graphics.hpp>
 
-class Ant : public SimObject
+class Ant
 {
-	using SimObject::SimObject;
-	bool holdingFood;
+	sf::RectangleShape body;
+	sf::Vector2f detection;
+	sf::CircleShape test;
+
 	float speed;
-	float wanderStrength;
-	sf::RectangleShape detectRect[3]; // 0 - left detection, 1 - min detection, 2 - right detection
-	sf::FloatRect detectBox[3];
+	float wanderCoef;
+	float detectRadius;
+	bool holdingFood;
+	int pherLeft;
+
+	void ResetPheromones();
 
 public:
-	int toHomePheromoneInt;
-	int toFoodPheromoneInt;
-	void InitVariables();
-	void PickUpFood();
-	void ReturnFood();
+	Ant(sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f));
+	sf::Vector2f GetPos() const;
+	sf::Vector2f GetDetect() const;
+	void Rotate(float deg);
 	bool IsHoldingFood() const;
-	void ResetToHomePheromone();
-	void ResetToFoodPheromone();
-	void Update(std::vector<Pheromone*>& Pheromones);
-	
-	
-	
+	void PickFood();
+	void ColonyInt();
+	void Update();
+	void Render(sf::RenderWindow* window);
 };
 

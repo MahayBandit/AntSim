@@ -8,27 +8,17 @@ Simulation::Simulation()
 
 	window->setFramerateLimit(60);
 
-	Ants.clear();
-	Food.clear();
-	placePheromoneTimer.restart();
-	diffPheromoneTimer.restart();
+	pheromonePlaceTimer.restart();
+	pheromoneDiffTimer.restart();
 
-	//Initialize Colony
-	colony = new Colony("sprites/PH_Colony.png", sf::Vector2f(videoMode.width / 2, videoMode.height / 2));
-	colony->InitVariables();
+	for (int i = 0; i < 100; i++)
+		world.SpawnAnt(sf::Vector2f(800.0f, 450.0f));
 
-	//Initialize Ants
-	for (int i = 0; i < 250; i++)
-	{
-		Ants.push_back(new Ant("sprites/PH_Ant.png", sf::Vector2f(videoMode.width / 2, videoMode.height / 2)));
-		Ants[i]->InitVariables();
-	}
-
+	spawn = false;
 }
 
 Simulation::~Simulation()
 {
-	delete colony;
 	delete window;
 }
 
@@ -59,9 +49,8 @@ void Simulation::PollEvents()
 				sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
 
 				//Spawn food source at current mouse postion
-				Food.push_back(new FoodSource("sprites/PH_Food.png", sf::Vector2f(mousePos.x, mousePos.y)));
-				Food[Food.size() - 1]->InitVariables();
-				std::cout << "Food created at - x: " << mousePos.x << " y: " << mousePos.y << std::endl;
+				world.SpawnFood(sf::Vector2f(mousePos.x, mousePos.y));
+				
 			}
 		}
 	}
@@ -69,84 +58,66 @@ void Simulation::PollEvents()
 
 void Simulation::Update()
 {
+	int i = 0;
 	PollEvents();
 
-	//Update Colony
-	colony->Update(Ants);
-
-	//std::cout << "Timer: " << clock.getElapsedTime().asSeconds() << std::endl;
-
 	//Update Ants
-	for (int i = 0; i < Ants.size(); i++)
+	for (Ant* ant : world.ants)
 	{
-		Ants[i]->Update(Pheromones);
-		if (placePheromoneTimer.getElapsedTime().asSeconds() > 0.25)
+		ant->Update();
+		world.CheckPheromones(i++);
+		if (spawn)
 		{
-			for (int j = 0; j < Ants.size(); j++)
+			world.SpawnPheromone(ant->GetPos(), ant->IsHoldingFood());
+		}
+	}
+	spawn = false;
+
+	if (pheromonePlaceTimer.getElapsedTime().asSeconds() > 0.5f)
+	{
+		spawn = true;
+		pheromonePlaceTimer.restart();
+	}
+
+	if (pheromoneDiffTimer.getElapsedTime().asSeconds() > 0.5f)
+	{
+		for (int i = 0; i < world.pheromones.size(); i++)
+		{
+			world.pheromones[i]->Diffuse();
+			if (world.pheromones[i]->toDelete)
 			{
-				if (Ants[j]->toHomePheromoneInt > 0 && !Ants[j]->IsHoldingFood())
-				{
-					Pheromones.push_back(new Pheromone("sprites/ToHomePheromone.png", Ants[j]->GetPostion()));
-					Pheromones[Pheromones.size() - 1]->InitVariables(Ants[j]->IsHoldingFood(), Ants[j]->toHomePheromoneInt);
-					Ants[j]->toHomePheromoneInt--;
-				}
-				else if (Ants[j]->toFoodPheromoneInt > 0 && Ants[j]->IsHoldingFood())
-				{
-					Pheromones.push_back(new Pheromone("sprites/ToFoodPheromone.png", Ants[j]->GetPostion()));
-					Pheromones[Pheromones.size() - 1]->InitVariables(Ants[j]->IsHoldingFood(), Ants[j]->toFoodPheromoneInt);
-					Ants[j]->toFoodPheromoneInt--;
-				}		
+				world.pheromones.erase(world.pheromones.begin() + i);
 			}
-			placePheromoneTimer.restart();
+			pheromoneDiffTimer.restart();
 		}
 	}
 
-	//Update food
-	for (int i = 0; i < Food.size(); i++)
-	{
-		Food[i]->Update(Ants);
-	}
-
-	for (int i = 0; i < Pheromones.size(); i++)
-	{
-		Pheromones[i]->Update(diffPheromoneTimer.getElapsedTime());
-		
-		if (Pheromones[i]->toDeletion)
-		{
-			Pheromones.erase(Pheromones.begin() + i);
-			//std::cout << "Pheromone " << i << ": erased" << std::endl;
-		}
-	}
-
-	if (diffPheromoneTimer.getElapsedTime().asSeconds() > 2.5f)
-		diffPheromoneTimer.restart();
+	//Collsion checks
+	world.CheckFood();
+	world.CheckColony();
+	//world.CheckPheromones();
 }
 
 void Simulation::Render()
 {
 	//Background color
 	window->clear(sf::Color::Black);
+	
+	//Render pheromones
+	for (Pheromone* pher : world.pheromones)
+		pher->Render(window);
 
-	//Draw Pheromones
-	for (int i = 0; i < Pheromones.size(); i++)
-		Pheromones[i]->Render(window);
+	//Render food sources
+	for (FoodSource* food : world.food)
+		food->Render(window);
 
-	//Draw Food
-	for (int i = 0; i < Food.size(); i++)
-		Food[i]->Render(window);
+	//Render ants
+	for (Ant* ant : world.ants)
+		ant->Render(window);
 
-	//Draw Ants
-	for (int i = 0; i < Ants.size(); i++)
-	{
-		Ants[i]->Render(window);
-		//window->draw(Ants[i]->detectRect[0]);
-		//window->draw(Ants[i]->detectRect[1]);
-		//window->draw(Ants[i]->detectRect[2]);
-	}
-
-	//Draw Colony
-	colony->Render(window);
-
+	//Render colony
+	world.colony->Render(window);
+	
 	//Draw frame
 	window->display();
 }

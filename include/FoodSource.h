@@ -1,17 +1,15 @@
 #pragma once
 
-#include "include/Ant.h"
-#include "include/SimObject.h"
-#include <vector>
-#include <iostream>
+#include <SFML/Graphics.hpp>
 
-class FoodSource : public SimObject
+class FoodSource
 {
-	using SimObject::SimObject;
-	unsigned int stage;
-	int foodLeft;
-
+	sf::RectangleShape body;
+	int foodCount;
 public:
-	void InitVariables();
-	void Update(std::vector<Ant*>&);
+	FoodSource(sf::Vector2f pos);
+	sf::Vector2f GetPos() const;
+	float GetDistance(sf::Vector2f pos) const;
+	bool GiveFood();
+	void Render(sf::RenderWindow* window);
 };

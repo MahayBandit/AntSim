@@ -1,24 +1,40 @@
 #include "include/FoodSource.h"
 
-void FoodSource::InitVariables()
+FoodSource::FoodSource(sf::Vector2f pos)
 {
-	sprite.setOrigin(5, 5);
-
-	stage = 3;
-	foodLeft = 100;
+	body.setPosition(pos);
+	body.setSize(sf::Vector2f(10.0f, 10.0f));
+	body.setOrigin(5.0f, 5.0f);
+	body.setRotation(rand() % 361);
+	body.setFillColor(sf::Color::White);
+	
+	foodCount = 100;
 }
 
-void FoodSource::Update(std::vector<Ant*>& Ants)
+sf::Vector2f FoodSource::GetPos() const
 {
-	//Give food to passing ants
-	for (int i = 0; i < Ants.size(); i++)
+	return body.getPosition();;
+}
+
+float FoodSource::GetDistance(sf::Vector2f pos) const
+{
+	return sqrt(powf(GetPos().x - pos.x, 2) + powf(GetPos().y - pos.y, 2));;
+}
+
+bool FoodSource::GiveFood()
+{
+	if (foodCount > 0)
 	{
-		if (collsionBox.intersects(Ants[i]->collsionBox))
-		{
-			if (foodLeft > 0 && !Ants[i]->IsHoldingFood())
-			{
-				Ants[i]->PickUpFood();			
-			}
-		}
+		foodCount--;
+		return true;
 	}
+	else
+	{
+		return false;
+	}
+}
+
+void FoodSource::Render(sf::RenderWindow* window)
+{
+	window->draw(body);
 }

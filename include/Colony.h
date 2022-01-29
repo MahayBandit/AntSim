@@ -1,12 +1,17 @@
 #pragma once
 
-#include "include/SimObject.h"
-#include "include/Ant.h"
+#include <SFML/Graphics.hpp>
 
-class Colony : public SimObject
+class Colony
 {
-	using SimObject::SimObject;
+	sf::CircleShape body;
+
+	float radius;
+
 public:
-	void InitVariables();
-	void Update(std::vector<Ant*>&);
+	Colony(sf::Vector2f pos = sf::Vector2f(0.0f, 0.0f));
+	sf::Vector2f GetPos() const;
+	float GetRadius() const;
+	float GetDistance(sf::Vector2f pos) const;
+	void Render(sf::RenderWindow* window);
 };

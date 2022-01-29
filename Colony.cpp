@@ -1,22 +1,30 @@
 #include "include/Colony.h"
 
-void Colony::InitVariables()
+Colony::Colony(sf::Vector2f pos)
 {
-	sprite.setOrigin(15, 15);
+	radius = 15.0f;
+	body.setPosition(pos);
+	body.setRadius(radius);
+	body.setOrigin(radius, radius);
+	body.setFillColor(sf::Color::Blue);
 }
 
-void Colony::Update(std::vector<Ant*>& Ants)
+sf::Vector2f Colony::GetPos() const
 {
-	//Check for passing ants
-	for (int i = 0; i < Ants.size(); i++)
-	{
-		if (collsionBox.intersects(Ants[i]->collsionBox))
-		{
-			if (Ants[i]->IsHoldingFood())
-			{
-				Ants[i]->ReturnFood();
-			}
-			Ants[i]->ResetToHomePheromone();
-		}
-	}
+	return body.getPosition();
+}
+
+float Colony::GetRadius() const
+{
+	return radius;
+}
+
+float Colony::GetDistance(sf::Vector2f pos) const
+{
+	return sqrt(powf(GetPos().x - pos.x, 2.0f) + powf(GetPos().y - pos.y, 2.0f));
+}
+
+void Colony::Render(sf::RenderWindow* window)
+{
+	window->draw(body);
 }

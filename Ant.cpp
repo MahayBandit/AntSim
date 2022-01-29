@@ -1,130 +1,81 @@
 #include "include/Ant.h"
 
-void Ant::InitVariables()
+Ant::Ant(sf::Vector2f pos) : detection(pos)
 {
-	sprite.setOrigin(2, 1);
+	body.setPosition(pos);
+	body.setSize(sf::Vector2f(4.0f, 2.0f));
+	body.setOrigin(2.0f, 1.0f);
+	body.setRotation(rand() % 361);
+	body.setFillColor(sf::Color::Blue);
+	test.setRadius(1);
+	test.setPosition(pos);
+	test.setFillColor(sf::Color::Cyan);
 
-	holdingFood = false;
 	speed = 1.0f;
-	wanderStrength = 0.1f;
-	//toHomePheromoneInt = 20;
-	//toFoodPheromoneInt = 20;
-
-	for (int i = 0; i < 3; i++)
-	{
-		detectRect[i].setSize(sf::Vector2f(10, 10));
-		//detectRect[i].setFillColor(sf::Color::White);
-	}
-}
-
-void Ant::PickUpFood()
-{
-	holdingFood = true;
-	toHomePheromoneInt = 0;
-	toFoodPheromoneInt = 20;
-
-	if (!SetTexture("sprites/PH_Ant_holding.png"))
-		return;
-}
-
-void Ant::ReturnFood()
-{
+	wanderCoef = 0.15f;
+	detectRadius = 25.0f;
 	holdingFood = false;
-
-	toFoodPheromoneInt = 0;
-
-	if (!SetTexture("sprites/PH_Ant.png"))
-		return;
 }
 
+sf::Vector2f Ant::GetPos() const
+{
+	return body.getPosition();
+}
+
+sf::Vector2f Ant::GetDetect() const
+{
+	return detection;
+}
+
+void Ant::Rotate(float deg)
+{
+	body.rotate(deg);
+}
 
 bool Ant::IsHoldingFood() const
 {
 	return holdingFood;
 }
 
-void Ant::ResetToHomePheromone()
+void Ant::ResetPheromones()
 {
-	toHomePheromoneInt = 20;
+	pherLeft = 10;
 }
 
-void Ant::ResetToFoodPheromone()
+void Ant::PickFood()
 {
-	toHomePheromoneInt = 20;
+	holdingFood = true;
+	body.setFillColor(sf::Color::Green);
+	body.rotate(180.0f);
+	ResetPheromones();
 }
 
-void Ant::Update(std::vector<Pheromone*>& Pheromones)
+void Ant::ColonyInt()
 {
-	for (int i = 0; i < 3; i++)
+	ResetPheromones();
+
+	if (holdingFood)
 	{
-		for (int j = 0; j < Pheromones.size(); j++)
-		{
-			if (detectBox[i].contains(Pheromones[j]->GetPostion()))
-			{
-				if (IsHoldingFood() && Pheromones[j]->type)
-				{
-					switch (i)
-					{
-					case 0: sprite.rotate(-25);
-						break;
-					case 1: sprite.rotate(0);
-						break;
-					case 2: sprite.rotate(25);
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-
-				if (!IsHoldingFood() && !Pheromones[j]->type)
-				{
-					switch (i)
-					{
-					case 0: sprite.rotate(-25 );
-						break;
-					case 1: sprite.rotate(0);
-						break;
-					case 2: sprite.rotate(25);
-						break;
-					default:
-						break;
-					}
-					break;
-				}
-			}
-			else
-			{
-				//Wander behaviour
-				sprite.rotate((rand() % 181 - 90) * wanderStrength);
-				break;
-			}
-		}
+		holdingFood = false;
+		body.setFillColor(sf::Color::Blue);
 	}
+}
 
-	float degree = sprite.getRotation();
+void Ant::Update()
+{
+	body.rotate((rand() % 181 - 90) * wanderCoef);
+	float degree = body.getRotation();
 	float rad = degree * 3.14159265f / 180.0f;
-	sf::Vector2f angle(cos(rad), sin(rad));
-	
-	sprite.move(angle * speed);
-	
-	for(int i = 0; i < 3; i++)
-	{
-		detectRect[i].setPosition(sprite.getPosition());
-	}
-	
-	detectRect[0].setRotation(degree - 90);
-	detectRect[1].setRotation(degree - 45);
-	detectRect[2].setRotation(degree);
+	sf::Vector2f dir(cos(rad), sin(rad));
 
-	//Update collsion box
-	collsionBox = sprite.getGlobalBounds();
-	for (int i = 0; i < 3; i++)
-	{
-		detectBox[i] = detectRect[i].getGlobalBounds();
-	}
-
+	body.move(dir * speed);
+	test.setPosition(body.getPosition().x + dir.x * detectRadius, body.getPosition().y + dir.y * detectRadius);
+	detection.x += body.getPosition().x + dir.x * detectRadius;
+	detection.y += body.getPosition().y + dir.y * detectRadius;
 }
 
-
-
+void Ant::Render(sf::RenderWindow* window)
+{
+	//window->draw(test);
+	window->draw(body);
+}
